@@ -30,7 +30,8 @@
       Oops! Something went wrong. Please try again or email us at support@cloudhostpro.uk.
     </div>
 
-    <form action="https://formspree.io/f/your-form-id" method="POST" class="contact-form" id="contact-form">
+    <form action="http://13.41.191.215:3000/contact" method="POST" class="contact-form" id="contact-form">
+
       <label for="name">Name</label>
       <input type="text" id="name" name="name" required />
 
@@ -74,20 +75,26 @@
     const form = document.getElementById("contact-form");
     const successMsg = document.getElementById("form-success");
     const errorMsg = document.getElementById("form-error");
-
+  
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
-      const formData = new FormData(form);
-
+  
+      const payload = {
+        name: form.name.value,
+        email: form.email.value,
+        message: form.message.value
+      };
+  
       try {
         const res = await fetch(form.action, {
           method: "POST",
-          body: formData,
           headers: {
-            Accept: "application/json"
-          }
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload)
         });
-
+  
         if (res.ok) {
           successMsg.style.display = "block";
           errorMsg.style.display = "none";
@@ -98,8 +105,10 @@
       } catch (err) {
         successMsg.style.display = "none";
         errorMsg.style.display = "block";
+        console.error("Form submission error:", err);
       }
     });
   </script>
+  
 </body>
 </html>
